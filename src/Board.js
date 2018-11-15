@@ -176,13 +176,15 @@
       
       for (var i = 0; i < rows.length; i++) {
         for (var j = 0; j < rows[i].length; j++) {
-          if (this._getFirstRowColumnIndexForMajorDiagonalOn(i, j) === index) {
+          if (this._getFirstRowColumnIndexForMajorDiagonalOn(i, j) === index && rows[i][j] === 1 && this._isInBounds(i, j)) {
             count++;
           }
         }
       }
-      
-      return count > 4; // fixme
+      // if (this._isInBounds() && count > 1) {
+      //   return true;
+      // }
+      return count > 1; // fixme
     },
 
     // test if any major diagonals on this board contain conflicts
@@ -190,12 +192,12 @@
       var rows = this.rows();
       
       for (var i = 0; i < rows.length; i++) {
-        // for (var j = 0; j < rows[i].length; j++) {
-          if (this.hasMajorDiagonalConflictAt(i)) {
+        for (var j = 0; j < rows[i].length; j++) {
+          if (this.hasMajorDiagonalConflictAt(j - i)) {
             // console.log(this.hasMajorDiagonalConflictAt(i));
             return true;
           }
-        // }
+        }
       }
       return false; // fixme
     },
