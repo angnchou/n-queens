@@ -14,29 +14,42 @@
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
 
-
+//next step: same row, next col
 window.findNRooksSolution = function(n) {
-  var solution = new Board({'n': 2});
-  // solution.togglePiece(1, 0);
-  // solution.togglePiece(0, 1);
-  // for (var i = 0; i < solution.length; i++) {
-  //   for (var j = 0; j < solution[i].length; j++) {
-      if (!this.hasAnyRooksConflicts()) {
-        solution.set(0, [1, 0]);
-        solution.set(1, [0, 1]);
-      }
-  //   }
-  // }
-  console.log(solution);
   /*
-  iterate through rows/columns
-    if no conflicts
-      toggle
+  traverse the tree (iterate)
+    based on first location, determine if following spaces have conflict
+      set/toggle, then continue
+    pop/slice/go back up the tree
+    untoggle first position
+      set new first
+        explore conflict in following spaces
+    repeat
   */
+   
+  var solution = new Board({'n': n});
+
+  var currentRow = 0;
+  var currentCol = 0;
+  solution.togglePiece(currentRow, currentCol);
+  for (var row = 0; row < n; row ++) {
+    for (var col = 0; col < n; col ++) {
+      solution.togglePiece(currentRow ++, currentCol++);
+      //console.log(solution, 'second toggle')
+      if (solution.hasAnyRooksConflicts()) {
+        solution.togglePiece(currentRow, currentCol);
+      } else {
+        solution.togglePiece(currentRow ++, currentCol ++);
+      }
+    }      
+  };
+  console.log(solution.rows(), 'solution')
    
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
    return solution;
 };
+
+console.log(window.findNRooksSolution(3));
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
