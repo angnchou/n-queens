@@ -27,26 +27,47 @@ window.findNRooksSolution = function(n) {
     repeat
   */
    
-  var solution = new Board({'n': n});
-
+  var solution = new Board({n: n});
+  // console.log(solution);
+  var matrix = solution.rows();
+  // console.log(matrix);
   var currentRow = 0;
   var currentCol = 0;
-  solution.togglePiece(currentRow, currentCol);
-  for (var row = 0; row < n; row ++) {
-    for (var col = 0; col < n; col ++) {
-      solution.togglePiece(currentRow ++, currentCol++);
-      //console.log(solution, 'second toggle')
-      if (solution.hasAnyRooksConflicts()) {
-        solution.togglePiece(currentRow, currentCol);
-      } else {
-        solution.togglePiece(currentRow ++, currentCol ++);
-      }
-    }      
-  };
-  console.log(solution.rows(), 'solution')
+  var limit = n;
+  
+  // if (n === 1) {
+  //   return [1];
+  // }
+  
+  solution.togglePiece(currentRow, currentCol); // toggle 0, 0
+  console.log(solution);
+  var choices = function(currentRow, currentCol) {
+    if (currentCol === limit && !(currentRow > n)) {
+      currentRow + 1;
+      currentCol = 0;
+    }
    
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
-   return solution;
+    matrix.togglePiece(currentRow, currentCol ++); // toggle 0, 1
+    
+    for (var row = 0; row < limit; row ++) { 
+      // for (var col = 0; col < n; col ++) {
+      // if (matrix.hasAnyRooksConflicts() === false) {
+      if (!matrix.hasAnyRowConflictsAt(currentRow) && !matrix.hasAnyColConflictsAt(currentCol)) {
+        return choices(currentRow, currentCol);
+      } else {
+        matrix.togglePiece(currentRow, currentCol); // untoggle 0, 1
+        return choices(currentRow, currentCol);
+      }
+      // }
+      // if (currentCol === limit) {
+      //   currentRow ++ && currentCol = 0;
+      // }
+    } 
+  };
+  choices(currentRow, currentCol);
+  // console.log(matrix);
+  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(matrix));
+  return matrix;
 };
 
 console.log(window.findNRooksSolution(3));
