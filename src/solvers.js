@@ -16,11 +16,25 @@
 
 
 window.findNRooksSolution = function(n) {
-  var solution = new Board({'n': 2}); //fixme
-  solution.togglePiece(0, 1);
-  solution.togglePiece(1, 0);
-  console.log(n);
-  // console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
+  var solution = new Board({'n': 2});
+  // solution.togglePiece(1, 0);
+  // solution.togglePiece(0, 1);
+  // for (var i = 0; i < solution.length; i++) {
+  //   for (var j = 0; j < solution[i].length; j++) {
+      if (!this.hasAnyRooksConflicts()) {
+        solution.set(0, [1, 0]);
+        solution.set(1, [0, 1]);
+      }
+  //   }
+  // }
+  console.log(solution);
+  /*
+  iterate through rows/columns
+    if no conflicts
+      toggle
+  */
+   
+  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
    return solution;
 };
 
