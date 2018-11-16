@@ -17,60 +17,46 @@
 //next step: same row, next col
 window.findNRooksSolution = function(n) {
   /*
-  traverse the tree (iterate)
-    based on first location, determine if following spaces have conflict
-      set/toggle, then continue
-    pop/slice/go back up the tree
-    untoggle first position
-      set new first
-        explore conflict in following spaces
-    repeat
+  Recurse (row)
+    for item in row
+      toggle
+        check for conflict
+      recurse(row + 1)
+        check for conflict
+      toggle
+    return if row >= n
   */
-   
   var solution = new Board({n: n});
-  // console.log(solution);
-  var matrix = solution.rows();
-  // console.log(matrix);
-  var currentRow = 0;
-  var currentCol = 0;
-  var limit = n;
-  
-  // if (n === 1) {
-  //   return [1];
-  // }
-  
-  solution.togglePiece(currentRow, currentCol); // toggle 0, 0
-  console.log(solution);
-  var choices = function(currentRow, currentCol) {
-    if (currentCol === limit && !(currentRow > n)) {
-      currentRow + 1;
-      currentCol = 0;
+  // var matrix = solution.rows();
+  var currentRow;
+  var currentCol;
+  // var count = 0;
+  // matrix.togglePiece(currentRow, currentCol); // toggle 0, 0
+  var choices = function(currentRow = 0, currentCol = 0) {
+    if (currentRow >= n || currentCol >= n) {
+    // if (currentRow >= n) {
+      // count ++;
+      return solution.rows();
     }
-   
-    matrix.togglePiece(currentRow, currentCol ++); // toggle 0, 1
-    
-    for (var row = 0; row < limit; row ++) { 
+    for (var row = 0; row < n; row ++) { 
+      console.log(solution.rows());
+      solution.togglePiece(currentRow, currentCol); // toggle 0, 0
       // for (var col = 0; col < n; col ++) {
       // if (matrix.hasAnyRooksConflicts() === false) {
-      if (!matrix.hasAnyRowConflictsAt(currentRow) && !matrix.hasAnyColConflictsAt(currentCol)) {
-        return choices(currentRow, currentCol);
+      if (!solution.hasRowConflictAt(currentRow) && !solution.hasColConflictAt(currentCol)) {
+        choices(currentRow + 1, currentCol);
       } else {
-        matrix.togglePiece(currentRow, currentCol); // untoggle 0, 1
-        return choices(currentRow, currentCol);
+        choices(currentRow, currentCol + 1);
+        solution.togglePiece(currentRow, currentCol); // untoggle 0, 1
       }
-      // }
-      // if (currentCol === limit) {
-      //   currentRow ++ && currentCol = 0;
-      // }
     } 
   };
   choices(currentRow, currentCol);
-  // console.log(matrix);
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(matrix));
-  return matrix;
+  
+  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
+  return solution.rows();
 };
 
-console.log(window.findNRooksSolution(3));
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
