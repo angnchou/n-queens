@@ -26,35 +26,63 @@ window.findNRooksSolution = function(n) {
       toggle
     return if row >= n
   */
-  var solution = new Board({n: n});
-  // var matrix = solution.rows();
-  var currentRow;
-  var currentCol;
-  // var count = 0;
+  let board = new Board({n: n});
+  let rows = board.rows();
+  let solution = rows;
+  console.log('rows:', rows);
+  console.log('board:', board);
+  // var solution = new Board({n: n});
+  // var solutionx = solution.rows();
+  var currentRow = 0;
+  // var currentCol = 0;
+  var checker = false;
   // matrix.togglePiece(currentRow, currentCol); // toggle 0, 0
-  var choices = function(currentRow = 0, currentCol = 0) {
-    if (currentRow >= n || currentCol >= n) {
-    // if (currentRow >= n) {
+  // debugger;
+
+  var choices = function(currentRow) {
+    // if (currentRow >= n || currentCol >= n) {
+    if (currentRow === n) {
       // count ++;
-      return solution.rows();
+      solution = rows;
+      checker = true;
+      // solution.togglePiece(currentRow, col);
+      return;
     }
-    for (var row = 0; row < n; row ++) { 
-      console.log(solution.rows());
-      solution.togglePiece(currentRow, currentCol); // toggle 0, 0
-      // for (var col = 0; col < n; col ++) {
-      // if (matrix.hasAnyRooksConflicts() === false) {
-      if (!solution.hasRowConflictAt(currentRow) && !solution.hasColConflictAt(currentCol)) {
-        choices(currentRow + 1, currentCol);
-      } else {
-        choices(currentRow, currentCol + 1);
-        solution.togglePiece(currentRow, currentCol); // untoggle 0, 1
+    
+    
+    for (var currentCol = 0; currentCol < n; currentCol ++) { 
+      if (checker === true) {
+        break;
       }
+      console.log(board.rows());
+      board.togglePiece(currentRow, currentCol);
+      // count++; // toggle 0, 0
+      // for (var currentCol = 0; currentCol < n; currentCol ++) {
+      // if (matrix.hasAnyRooksConflicts() === false) {
+      // if (!board.hasRowConflictAt(currentRow) && !board.hascurrentColConflictAt(currentCol)) {
+      if (board.hasAnyRooksConflicts() === false) {
+        currentRow += 1;
+        choices(currentRow);
+        currentRow -= 1;
+        if (checker === false) {
+          board.togglePiece(currentRow, currentCol);
+        }
+      } else {
+        
+        // board.togglePiece(currentRow + 1, currentCol);
+        board.togglePiece(currentRow, currentCol); 
+        // count--;// untoggle 0, 1
+        // currentRow += 1;
+        // choices(currentRow);
+      }
+      // board.togglePiece(currentRow, col);
     } 
   };
-  choices(currentRow, currentCol);
+  choices(currentRow);
   
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
-  return solution.rows();
+  
+  console.log('Single board for ' + n + ' rooks:', JSON.stringify(board));
+  return solution;
 };
 
 
