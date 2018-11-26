@@ -29,23 +29,16 @@ window.findNRooksSolution = function(n) {
   let board = new Board({n: n});
   let rows = board.rows();
   let solution = rows;
-  console.log('rows:', rows);
-  console.log('board:', board);
-  // var solution = new Board({n: n});
-  // var solutionx = solution.rows();
+  // console.log('rows:', rows);
+  // console.log('board:', board);
+  
   var currentRow = 0;
-  // var currentCol = 0;
   var checker = false;
-  // matrix.togglePiece(currentRow, currentCol); // toggle 0, 0
-  // debugger;
 
   var choices = function(currentRow) {
-    // if (currentRow >= n || currentCol >= n) {
     if (currentRow === n) {
-      // count ++;
       solution = rows;
       checker = true;
-      // solution.togglePiece(currentRow, col);
       return;
     }
     
@@ -54,28 +47,18 @@ window.findNRooksSolution = function(n) {
       if (checker === true) {
         break;
       }
-      console.log(board.rows());
+      //console.log(board.rows());
       board.togglePiece(currentRow, currentCol);
-      // count++; // toggle 0, 0
-      // for (var currentCol = 0; currentCol < n; currentCol ++) {
-      // if (matrix.hasAnyRooksConflicts() === false) {
-      // if (!board.hasRowConflictAt(currentRow) && !board.hascurrentColConflictAt(currentCol)) {
       if (board.hasAnyRooksConflicts() === false) {
         currentRow += 1;
         choices(currentRow);
-        currentRow -= 1;
-        if (checker === false) {
-          board.togglePiece(currentRow, currentCol);
-        }
+        // currentRow -= 1;
+        // if (checker === false) {
+        //   board.togglePiece(currentRow, currentCol);
+        // }
       } else {
-        
-        // board.togglePiece(currentRow + 1, currentCol);
         board.togglePiece(currentRow, currentCol); 
-        // count--;// untoggle 0, 1
-        // currentRow += 1;
-        // choices(currentRow);
       }
-      // board.togglePiece(currentRow, col);
     } 
   };
   choices(currentRow);
@@ -88,7 +71,30 @@ window.findNRooksSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  var board = new Board({n: n});
+  //var rows = board.rows();
+  var row = 0;
+  //var checker = false;
+  var solutionCount = 0; //fixme
+
+  var findSolutions = function(row) {
+    if (row === n) {
+      solutionCount++;
+      return ;
+    }
+
+    for (var col = 0; col < n; col++) {
+      board.togglePiece(row, col);
+      if (!board.hasAnyRooksConflicts()) {
+        findSolutions(row + 1);
+      }
+      board.togglePiece(row, col);
+    }
+  }
+  findSolutions(0);
+
+
+
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
@@ -120,7 +126,6 @@ window.findNQueensSolution = function(n) {
         break;
       }
       board.togglePiece(currentRow, currentCol);
-      // count++; // toggle 0, 0
       //if there is no conflict
         //check the next row
 
@@ -132,14 +137,8 @@ window.findNQueensSolution = function(n) {
           board.togglePiece(currentRow, currentCol);
         }
       } else {
-        
-        // board.togglePiece(currentRow + 1, currentCol);
         board.togglePiece(currentRow, currentCol); 
-        // count--;// untoggle 0, 1
-        // currentRow += 1;
-        // choices(currentRow);
       }
-      // board.togglePiece(currentRow, col);
     } 
   };
   choices(currentRow);
@@ -152,7 +151,29 @@ window.findNQueensSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+
+  var board = new Board({n: n});
+  //var rows = board.rows();
+  var row = 0;
+  //var checker = false;
+  var solutionCount = 0; //fixme
+
+  var findSolutions = function(row) {
+    if (row === n) {
+      solutionCount++;
+      return ;
+    }
+
+    for (var col = 0; col < n; col++) {
+      board.togglePiece(row, col);
+      if (!board.hasAnyQueensConflicts()) {
+        findSolutions(row + 1);
+      }
+      board.togglePiece(row, col);
+    }
+  }
+  findSolutions(0);
+
 
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
